@@ -23,17 +23,17 @@ public class SmField {
         return cellsOfField[i][j] == 0;
     }
 
-    //  CROSS step. return true if success
+    //  CROSS XO. return true if success
     public boolean setOij(int i, int j) {
         return setIJ(i, j, -1);
     }
 
-    //  ZERO step. return true if success
+    //  ZERO XO. return true if success
     public boolean setXij(int i, int j) {
         return setIJ(i, j, 1);
     }
 
-    //  step by ZERO or CROSS
+    //  XO by ZERO or CROSS
     private boolean setIJ(int i, int j, int XO) {
 //        if (cellsOfField[i][j] != 0) return false;
         boolean boTmp = false;
@@ -43,8 +43,9 @@ public class SmField {
         if (stateSm == 0) {
             int tmp[] = Sta.cellSeq[i][j];
             int stateTmp = 0;
-            for (int l = 0; l < tmp.length; l++) {
-                int k = tmp[l];
+//            for (int l = 0; l < tmp.length; l++) {
+//                int k = tmp[l];
+            for (int k : tmp) {
                 sequence[k] += XO;
                 if (XO == 1) {
                     if (sequence[k] > stateTmp) stateTmp = sequence[k];
