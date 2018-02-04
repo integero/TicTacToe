@@ -82,8 +82,6 @@ public class Game extends Application {
         bigCells[bigI][ bigJ]=Sta.XO;
         int tmp[] = Sta.cellSeq[bigI][bigJ];
         int stateTmp = 0;
-//        for (int l = 0; l < tmp.length; l++) {
-//            int k = tmp[l];
         for (int k : tmp) {
             sequence[k] += Sta.XO;
             if (Sta.XO == 1) {
