@@ -12,25 +12,36 @@ public class Sta {
             {{1, 4, 7}, {1, 6}, {0, 1, 5}},
             {{2, 7}, {0, 2, 4, 6}, {2, 5}},
             {{0, 3, 7}, {3, 6}, {3, 4, 5}}};
-
+//  size of gamecell
     public static int smallSize;
+//  distance between cells
     public static int smallDx;
+//  size of small game field. depends of smallSize & smallDx
     public static int bigSize;
+//  distance between small game fields
     public static int bigDx;
+//  current player sign
     public static int XO;
+//  flag of end of game
     public static boolean finish;
 
+//  color of background
     public static final Color clrBack = Color.BROWN;
+//  color of non active cells
     public static final Color clrCell = Color.GOLD;
+//  color of available cells
     public static final Color clrAvailable = Color.GOLDENROD;
+//  color of winner
     public static final Color clrWin = Color.RED;
+//  color of was maiden XO
     public static final Color clrTxtSimple = Color.BLACK;
+//  color for possibles steps
     public static final Color clrTxtAvailable = Color.GREEN;
-
+//  neve used but...
     int[] getSeq(int i, int j) {
         return cellSeq[i][j];
     }
-
+//  big game field
     public static SmField[][] bigField = new SmField[3][3];
 
     public Sta() {
@@ -43,13 +54,5 @@ public class Sta {
                 bigField[i][j] = new SmField();
             }
         }
-        XO = 1;
-//        for TEST
-/*
-        bigField[1][2].setOij(0, 0);
-        bigField[1][2].setOij(1, 0);
-        bigField[1][2].setOij(0, 1);
-        bigField[1][2].setXij(0, 2);
-*/
     }
 }
