@@ -3,27 +3,24 @@ package main.java;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.stage.Stage;
-
 import static java.lang.Math.abs;
 
 public class Game extends Application {
     //  game cells
     private int[][] bigCells;
-    //  sequence for this smallField. Contains sum for all direction in smallField. Let you see java.java.Sta.
-    private int[] sequence;
+    //  sum3big for this smallField. Contains sum for all direction in smallField. Let you see java.java.Sta.
+    private int[] sum3big;
     private int bigI;
     private int bigJ;
-    boolean start;
-    boolean full;
-    Gui gui;
-    int winer;
+    private boolean startNfull;
+    private Gui gui;
+    private int winer;
 
     public Game() {
         new Sta();
         this.bigCells = new int[3][3];
-        sequence = new int[8];
-        start = true;
-        full = false;
+        sum3big = new int[8];
+        startNfull = true;
         Sta.XO = 1;
         winer = 0;
     }
@@ -50,22 +47,9 @@ public class Game extends Application {
             int jB = j / Sta.bigSize;
 //          start game or fool smallField focusing
 
-/*
-            if (start) {
-                start = false;
-                bigI = iB;
-                bigJ = jB;
-                gui.paintAll(false);
-                gui.paintAvailable(bigI, bigJ);
-                return;
-            }
-*/
-
-//            if (full) {
-            if (full||start) {
+            if (startNfull) {
                 if (Sta.bigField[iB][jB].isFull()) return;
-                full = false;
-                start = false;
+                startNfull = false;
                 bigI = iB;
                 bigJ = jB;
                 gui.paintAll(false);
@@ -74,7 +58,6 @@ public class Game extends Application {
             }
 
             if (iB == bigI && jB == bigJ) {
-
                 int is = (i - iB * Sta.bigSize) / Sta.smallSize;
                 int js = (j - jB * Sta.bigSize) / Sta.smallSize;
                 if (Sta.bigField[iB][jB].isCellFree(is, js))
@@ -85,11 +68,8 @@ public class Game extends Application {
 
     private void putXO(int is, int js) {
         boolean bigChange;
-        if (Sta.XO ==1)
-            bigChange=Sta.bigField[bigI][bigJ].setXij(is, js);
-        else
-            bigChange=Sta.bigField[bigI][bigJ].setOij(is, js);
 
+        bigChange = Sta.bigField[bigI][bigJ].setIJ(is, js, Sta.XO);
         gui.paintUntouch(bigI, bigJ);
         if ( bigChange ) {
             Sta.finish = setBigIJ();
@@ -97,7 +77,7 @@ public class Game extends Application {
         }
         Sta.XO = -Sta.XO;
         if (Sta.bigField[is][js].isFull()) {
-            full = true;
+            startNfull = true;
             gui.paintAll(true);
             gui.paintUntouch(is,js);
             return;
@@ -113,10 +93,10 @@ public class Game extends Application {
         int tmp[] = Sta.cellSeq[bigI][bigJ];
         int stateTmp = 0;
         for (int k : tmp) {
-            sequence[k] += Sta.XO;
+            sum3big[k] += Sta.XO;
             if (Sta.XO == 1) {
-                if (sequence[k] > stateTmp) stateTmp = sequence[k];
-            } else if (sequence[k] < stateTmp) stateTmp = sequence[k];
+                if (sum3big[k] > stateTmp) stateTmp = sum3big[k];
+            } else if (sum3big[k] < stateTmp) stateTmp = sum3big[k];
         }
         if (abs(stateTmp) == 3) {
             gui.paintWinner(Sta.XO, bigCells);

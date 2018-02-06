@@ -15,7 +15,7 @@ public class SmField {
     boolean canX;
     boolean can0;
 
-    public SmField() {
+    SmField() {
         freeCells = 9;
         this.stateSm = 0;
         this.cellsSF = new int[3][3];
@@ -23,7 +23,7 @@ public class SmField {
         count3sm = new int[8];
     }
 
-    public boolean isCellFree(int i, int j) {
+    boolean isCellFree(int i, int j) {
         return cellsSF[i][j] == 0;
     }
 
@@ -38,11 +38,10 @@ public class SmField {
     }
 
 //  XO by ZERO or CROSS
-    private boolean setIJ(int i, int j, int XO) {
+boolean setIJ(int i, int j, int XO) {
         boolean boTmp = false;
         freeCells--;
         cellsSF[i][j] = XO;
-//        cellsSF[i][j] += XO;
 //  recalculating sums of necessary directions for placing XO in cell (i,j), IF smallField is not occupied
         if (stateSm == 0) {
             int tmp[] = Sta.cellSeq[i][j];
@@ -72,12 +71,12 @@ public class SmField {
     }
 
 //  current state may be useful in future
-    public int getStateSm() {
+int getStateSm() {
         return stateSm;
     }
 
-//  is all cells occupied may be usefulin future
-    public boolean isFull() {
+    //  is all cells occupied may be usefulin future
+    boolean isFull() {
         return freeCells == 0;
     }
 
@@ -86,7 +85,7 @@ public class SmField {
         return sum3sm;
     }
 
-    public int[][] getSmallField() {
+    int[][] getSmallField() {
         return cellsSF;
     }
 
