@@ -13,8 +13,7 @@ public class Game extends Application {
     private int[] sequence;
     private int bigI;
     private int bigJ;
-//    private int Sta.bigSize;
-    boolean start;
+    boolean startAfull;
     Gui gui;
     int winer;
 
@@ -22,7 +21,7 @@ public class Game extends Application {
         new Sta();
         this.bigCells = new int[3][3];
         sequence = new int[8];
-        start = true;
+        startAfull = true;
         Sta.XO = 1;
         winer = 0;
     }
@@ -30,6 +29,7 @@ public class Game extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         gui = new Gui();
+//      All smallField first time painting
         gui.paintAll();
 
         gui.stage.setScene(gui.scene);
@@ -40,18 +40,23 @@ public class Game extends Application {
     private void gameListener(final Node node) {
         node.setOnMousePressed(event -> {
             if (Sta.finish) gui.stage.close();
+//          canvas click position
             int i = (int) event.getX();
             int j = (int) event.getY();
+//          smallField chosen
             int iB = i / Sta.bigSize;
             int jB = j / Sta.bigSize;
-            if (start) {
-                start = false;
+//          start game or fool smallField focusing
+            if (startAfull) {
+                startAfull = false;
                 bigI = iB;
                 bigJ = jB;
+
                 gui.paintAvailable(bigI, bigJ);
                 return;
             }
             if (iB == bigI && jB == bigJ) {
+
                 int is = (i - iB * Sta.bigSize) / Sta.smallSize;
                 int js = (j - jB * Sta.bigSize) / Sta.smallSize;
                 if (Sta.bigField[iB][jB].isCellFree(is, js)) putXO(is,js);
