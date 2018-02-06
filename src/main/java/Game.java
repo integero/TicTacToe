@@ -13,7 +13,8 @@ public class Game extends Application {
     private int[] sequence;
     private int bigI;
     private int bigJ;
-    boolean startAfull;
+    boolean start;
+    boolean full;
     Gui gui;
     int winer;
 
@@ -21,7 +22,8 @@ public class Game extends Application {
         new Sta();
         this.bigCells = new int[3][3];
         sequence = new int[8];
-        startAfull = true;
+        start = true;
+        full = false;
         Sta.XO = 1;
         winer = 0;
     }
@@ -30,9 +32,9 @@ public class Game extends Application {
     public void start(Stage primaryStage) throws Exception {
         gui = new Gui();
 //      All smallField first time painting
-        gui.paintAll();
-
         gui.stage.setScene(gui.scene);
+        gui.paintAll(true);
+
         gameListener(gui.canvas);
         gui.stage.show();
     }
@@ -47,19 +49,36 @@ public class Game extends Application {
             int iB = i / Sta.bigSize;
             int jB = j / Sta.bigSize;
 //          start game or fool smallField focusing
-            if (startAfull) {
-                startAfull = false;
+
+/*
+            if (start) {
+                start = false;
                 bigI = iB;
                 bigJ = jB;
-
+                gui.paintAll(false);
                 gui.paintAvailable(bigI, bigJ);
                 return;
             }
+*/
+
+//            if (full) {
+            if (full||start) {
+                if (Sta.bigField[iB][jB].isFull()) return;
+                full = false;
+                start = false;
+                bigI = iB;
+                bigJ = jB;
+                gui.paintAll(false);
+                gui.paintAvailable(bigI, bigJ);
+                return;
+            }
+
             if (iB == bigI && jB == bigJ) {
 
                 int is = (i - iB * Sta.bigSize) / Sta.smallSize;
                 int js = (j - jB * Sta.bigSize) / Sta.smallSize;
-                if (Sta.bigField[iB][jB].isCellFree(is, js)) putXO(is,js);
+                if (Sta.bigField[iB][jB].isCellFree(is, js))
+                    putXO(is,js);
             }
         });
     }
@@ -77,6 +96,12 @@ public class Game extends Application {
             if (Sta.finish) return;
         }
         Sta.XO = -Sta.XO;
+        if (Sta.bigField[is][js].isFull()) {
+            full = true;
+            gui.paintAll(true);
+            gui.paintUntouch(is,js);
+            return;
+        }
         bigI = is;
         bigJ = js;
         gui.paintAvailable(bigI, bigJ);

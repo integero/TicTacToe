@@ -8,19 +8,23 @@ public class SmField {
 //  0 - not occupied    -1 - occ by ZERO    1 - occ by CROSS
     private int stateSm;
 //  game cells
-    private int[][] cellsOfField;
-//  sequence for this smallField. Contains sum for all direction in smallField. Let you see java.java.Sta.
-    private int[] sequence;
+    private int[][] cellsSF;
+//  sum3sm for this smallField. Contains sum for all direction in smallField. Let you see java.java.Sta.
+    private int[] sum3sm;
+    private int[] count3sm;
+    boolean canX;
+    boolean can0;
 
     public SmField() {
         freeCells = 9;
         this.stateSm = 0;
-        this.cellsOfField = new int[3][3];
-        sequence = new int[8];
+        this.cellsSF = new int[3][3];
+        sum3sm = new int[8];
+        count3sm = new int[8];
     }
 
     public boolean isCellFree(int i, int j) {
-        return cellsOfField[i][j] == 0;
+        return cellsSF[i][j] == 0;
     }
 
 //  CROSS XO. return true if success
@@ -37,20 +41,31 @@ public class SmField {
     private boolean setIJ(int i, int j, int XO) {
         boolean boTmp = false;
         freeCells--;
-        cellsOfField[i][j] += XO;
+        cellsSF[i][j] = XO;
+//        cellsSF[i][j] += XO;
 //  recalculating sums of necessary directions for placing XO in cell (i,j), IF smallField is not occupied
         if (stateSm == 0) {
             int tmp[] = Sta.cellSeq[i][j];
             int stateTmp = 0;
             for (int k : tmp) {
-                sequence[k] += XO;
+                sum3sm[k] += XO;
+                count3sm[k]++;
                 if (XO == 1) {
-                    if (sequence[k] > stateTmp) stateTmp = sequence[k];
-                } else if (sequence[k] < stateTmp) stateTmp = sequence[k];
+                    if (sum3sm[k] > stateTmp) stateTmp = sum3sm[k];
+                } else if (sum3sm[k] < stateTmp) stateTmp = sum3sm[k];
             }
             if (abs(stateTmp) == 3) {
                 this.stateSm = XO;
                 boTmp = true;
+            } else {
+                for (int k = 0; k < 8; k++) {
+                    can0 = (count3sm[k] + sum3sm[k]) == 0;
+                    if (can0) break;
+                }
+                for (int k = 0; k < 8; k++) {
+                    canX = (count3sm[k] - sum3sm[k]) == 0;
+                    if (canX) break;
+                }
             }
         }
         return boTmp;
@@ -68,11 +83,15 @@ public class SmField {
 
 //    for debugging only
     public int[] getSequence() {
-        return sequence;
+        return sum3sm;
     }
 
     public int[][] getSmallField() {
-        return cellsOfField;
+        return cellsSF;
+    }
+
+    int getCell(int i, int j) {
+        return cellsSF[i][j];
     }
 
 }

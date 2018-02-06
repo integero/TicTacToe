@@ -1,6 +1,7 @@
 package main.java;
 
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 public class Sta {
 //                              [0-7] - index of sequece array
@@ -37,7 +38,13 @@ public class Sta {
     public static final Color clrTxtSimple = Color.BLACK;
 //  color for possibles steps
     public static final Color clrTxtAvailable = Color.GREEN;
-//  neve used but...
+
+    static final Color clrTxtX = Color.RED;
+    static final Color clrTxtXw = Color.DARKRED;
+    static final Color clrTxt0 = Color.BLUE;
+    static final Color clrTxt0w = Color.DARKBLUE;
+
+//  never used but...
     int[] getSeq(int i, int j) {
         return cellSeq[i][j];
     }
