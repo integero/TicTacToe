@@ -34,7 +34,7 @@ class Gui {
         int[][] cells = Sta.bigField[bigI][bigJ].getSmallField();
 
         currColor = (Color) gc.getFill();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++) {
 //              cells painting
                 gc.fillRect(blockPosition(bigI, i), blockPosition(bigJ, j), Sta.smallSize, Sta.smallSize);
@@ -43,28 +43,28 @@ class Gui {
                 else if (available && cells[i][j] == 0)
                     paintCell(Sta.XO, bigI, bigJ, i, j, available);
             }
-        }
     }
 
     private void paintCell(int xo, int bigI, int bigJ, int i, int j, boolean av) {
         int st = Sta.bigField[bigI][bigJ].getStateSm();
-        String xoTxt;
-        Color txtColor;
-        if (xo == -1) {
-            xoTxt = "0";
-            if (st == -1)
-                txtColor = Sta.clrTxt0w;
-            else
-                txtColor = Sta.clrTxt0;
-        } else {
-            xoTxt = "X";
-            if (st == -1)
-                txtColor = Sta.clrTxtXw;
-            else
-                txtColor = Sta.clrTxtX;
-        }
+        String xoTxt = (xo == -1) ? "0" : "X";
+        Color txtColor=(xo==-1)?(st==-1)?Sta.clrTxt0w:Sta.clrTxt0:(st==1)?Sta.clrTxtXw:Sta.clrTxtX;
+//        if (xo == -1) {
+//            xoTxt = "0";
+//            txtColor = (st==-1)?Sta.clrTxt0w:Sta.clrTxt0;
+//            if (st == -1)
+//                txtColor = Sta.clrTxt0w;
+//            else
+//                txtColor = Sta.clrTxt0;
+//        } else {
+//            xoTxt = "X";
+//            txtColor = (st==1)?Sta.clrTxtXw:Sta.clrTxtX;
+//            if (st == 1)
+//                txtColor = Sta.clrTxtXw;
+//            else
+//                txtColor = Sta.clrTxtX;
+//        }
         if (av) gc.setGlobalAlpha(0.3);
-//        gc.setFont(Font.font());
         gc.setFill(txtColor);
         gc.fillText(xoTxt, leftXO(bigI, i), bottXO(bigJ, j));
         gc.setFill(currColor);
@@ -101,21 +101,19 @@ class Gui {
 
     //  smallField available for gamestep
     void paintAvailable(int bigI, int bigJ) {
-        gc.setFill(Sta.clrAvailable);
+        gc.setFill(Sta.clrAvlbl);
         paintIJ(bigI, bigJ, true);
     }
 
     //  WINNER TAKES ALL!!!
     void paintWinner(int winner, int[][] fin) {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
                 if (fin[i][j] == winner) {
                     gc.setFill(Sta.clrWin);
                     paintIJ(i, j, false);
                     gc.setFill(Sta.clrCell);
                 }
-            }
-        }
 //      warning for CLOSE game
         gc.setFill(Color.WHITE);
         gc.fillText("Click at any place ", Sta.smallSize, Sta.bigSize);

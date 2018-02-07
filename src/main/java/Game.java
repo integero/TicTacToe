@@ -6,10 +6,9 @@ import javafx.stage.Stage;
 import static java.lang.Math.abs;
 
 public class Game extends Application {
-    //  game cells
-    private int[][] bigCells;
-    //  sum3big for this smallField. Contains sum for all direction in smallField. Let you see java.java.Sta.
-    private int[] sum3big;
+
+    private int[][] bigCells;       //  game cells
+    private int[] sum3big;          //  Contains sum for all direction in bigCells. Let you see Sta.
     private int bigI;
     private int bigJ;
     private boolean startNfull;

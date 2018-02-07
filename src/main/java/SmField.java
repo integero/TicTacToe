@@ -2,23 +2,19 @@ package main.java;
 
 import static java.lang.Math.abs;
 
-public class SmField {
-//    amount of free cells
-    private int freeCells;
-//  0 - not occupied    -1 - occ by ZERO    1 - occ by CROSS
-    private int stateSm;
-//  game cells
-    private int[][] cellsSF;
-//  sum3sm for this smallField. Contains sum for all direction in smallField. Let you see java.java.Sta.
-    private int[] sum3sm;
-    private int[] count3sm;
-    boolean canX;
-    boolean can0;
+class SmField {
+    private int freeCells;      //    amount of free cells
+    private int stateSm;        //  0 - not occupied    -1 - occ by ZERO    1 - occ by CROSS
+    private int[][] cellsSF;    //  game cells
+    private int[] sum3sm;       //  Contains sum for all direction in cellsSF. Let you see Sta.
+    private int[] count3sm;     //  Contains counts of occupied cells for all directions.
+    private boolean canX;       //  Can X win this field
+    private boolean can0;       //  Can 0 win this field
 
     SmField() {
         freeCells = 9;
-        this.stateSm = 0;
-        this.cellsSF = new int[3][3];
+        stateSm = 0;
+        cellsSF = new int[3][3];
         sum3sm = new int[8];
         count3sm = new int[8];
     }
@@ -27,62 +23,42 @@ public class SmField {
         return cellsSF[i][j] == 0;
     }
 
-//  CROSS XO. return true if success
-    public boolean setOij(int i, int j) {
-        return setIJ(i, j, -1);
+    boolean isCanX() {
+        return canX;
     }
 
-//  ZERO XO. return true if success
-    public boolean setXij(int i, int j) {
-        return setIJ(i, j, 1);
+    boolean isCan0() {
+        return can0;
     }
 
-//  XO by ZERO or CROSS
-boolean setIJ(int i, int j, int XO) {
+    boolean setIJ(int i, int j, int XO) {   //  settings XO in cell
         boolean boTmp = false;
         freeCells--;
         cellsSF[i][j] = XO;
-//  recalculating sums of necessary directions for placing XO in cell (i,j), IF smallField is not occupied
-        if (stateSm == 0) {
+        if (stateSm == 0) {     //  calculation the current situation if field s not occupied
             int tmp[] = Sta.cellSeq[i][j];
-            int stateTmp = 0;
+            boolean flag = false;
             for (int k : tmp) {
-                sum3sm[k] += XO;
                 count3sm[k]++;
-                if (XO == 1) {
-                    if (sum3sm[k] > stateTmp) stateTmp = sum3sm[k];
-                } else if (sum3sm[k] < stateTmp) stateTmp = sum3sm[k];
+                if (abs(sum3sm[k] += XO) == 3) flag = true;
             }
-            if (abs(stateTmp) == 3) {
+            if (flag) {         //   someone makes a top three
                 this.stateSm = XO;
                 boTmp = true;
-            } else {
-                for (int k = 0; k < 8; k++) {
-                    can0 = (count3sm[k] + sum3sm[k]) == 0;
-                    if (can0) break;
-                }
-                for (int k = 0; k < 8; k++) {
-                    canX = (count3sm[k] - sum3sm[k]) == 0;
-                    if (canX) break;
-                }
+            } else {            //   if not, then calculate the posibility in future
+                for (int k = 0; k < 8; k++) if (can0 = (count3sm[k] + sum3sm[k]) == 0) break;
+                for (int k = 0; k < 8; k++) if (canX = (count3sm[k] - sum3sm[k]) == 0) break;
             }
         }
         return boTmp;
     }
 
-//  current state may be useful in future
-int getStateSm() {
+    int getStateSm() {
         return stateSm;
     }
 
-    //  is all cells occupied may be usefulin future
     boolean isFull() {
         return freeCells == 0;
-    }
-
-//    for debugging only
-    public int[] getSequence() {
-        return sum3sm;
     }
 
     int[][] getSmallField() {
