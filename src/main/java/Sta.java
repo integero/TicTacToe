@@ -3,11 +3,12 @@ package main.java;
 import javafx.scene.paint.Color;
 
 class Sta {
-//                              [0-7] - index of sequece array
+//                              [0-7] - index of sum & count arrays
 //            []  []  []  7     for example, changes in cell[2][0]
 //            []  []  []  6     entails changes in sequence array with index 0, 3, 7
 //            []  []  []  5
 //          0  1   2   3  4
+
     final static int[][][] cellSeq = new int[][][]{
             {{1, 4, 7}, {1, 6}, {0, 1, 5}},
             {{2, 7}, {0, 2, 4, 6}, {2, 5}},
@@ -30,6 +31,7 @@ class Sta {
     static final Color clrTxt0 = Color.BLUE;            //  color for possibles steps
     static final Color clrTxt0w = Color.DARKBLUE;       //  color of was maiden O
 
+    static  Color[] bigCellClr;
 //  never used but...
     int[] getSeq(int i, int j) {
         return cellSeq[i][j];
@@ -43,6 +45,11 @@ class Sta {
         bigSize = 3 * smallSize + 4 * smallDx;
         bigDx = 4;
         bigField = new SmField[3][3];
+        bigCellClr = new Color[3];
+        bigCellClr[0] = Color.LIGHTBLUE;
+        bigCellClr[1] = Color.GOLD;
+        bigCellClr[2] = Color.ORANGERED;
+
         for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) bigField[i][j] = new SmField();
     }
 }

@@ -5,15 +5,24 @@ import static java.lang.Math.abs;
 class SmField {
     private int freeCells;      //    amount of free cells
     private int stateSm;        //  0 - not occupied    -1 - occ by ZERO    1 - occ by CROSS
+    private boolean canX;       //  Can X win this field
+    private boolean can0;       //  Can 0 win this field
     private int[][] cellsSF;    //  game cells
     private int[] sum3sm;       //  Contains sum for all direction in cellsSF. Let you see Sta.
     private int[] count3sm;     //  Contains counts of occupied cells for all directions.
-    private boolean canX;       //  Can X win this field
-    private boolean can0;       //  Can 0 win this field
+//    for example
+//                      [X] [ ] [0]  7
+//                      [ ] [X] [ ]  6
+//                      [ ] [0] [X]  5
+//                    0  1   2   3   4   5   6   7
+// sum3sm             0  1   0   0   3   0   1   0    we can make conclusion about het trick from this array
+// count3sm           2  1   2   2   3   2   1   2    the same for possibility of het trick
 
     SmField() {
         freeCells = 9;
         stateSm = 0;
+        can0 = true;
+        canX = true;
         cellsSF = new int[3][3];
         sum3sm = new int[8];
         count3sm = new int[8];

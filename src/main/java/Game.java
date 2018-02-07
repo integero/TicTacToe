@@ -3,6 +3,9 @@ package main.java;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.stage.Stage;
+
+import java.util.Arrays;
+
 import static java.lang.Math.abs;
 
 public class Game extends Application {
@@ -14,6 +17,7 @@ public class Game extends Application {
     private boolean startNfull;
     private Gui gui;
     private int winer;
+    private boolean draw;
 
     public Game() {
         new Sta();
@@ -37,16 +41,13 @@ public class Game extends Application {
 
     private void gameListener(final Node node) {
         node.setOnMousePressed(event -> {
-            if (Sta.finish) gui.stage.close();
-//          canvas click position
+            if (Sta.finish || draw) gui.stage.close();
             int i = (int) event.getX();
             int j = (int) event.getY();
-//          smallField chosen
-            int iB = i / Sta.bigSize;
-            int jB = j / Sta.bigSize;
-//          start game or fool smallField focusing
+            int iB = i / Sta.bigSize;       //  index of block
+            int jB = j / Sta.bigSize;       //  where click was maden
 
-            if (startNfull) {
+            if (startNfull) {     //  for start game & for full target block
                 if (Sta.bigField[iB][jB].isFull()) return;
                 startNfull = false;
                 bigI = iB;
@@ -59,9 +60,12 @@ public class Game extends Application {
             if (iB == bigI && jB == bigJ) {
                 int is = (i - iB * Sta.bigSize) / Sta.smallSize;
                 int js = (j - jB * Sta.bigSize) / Sta.smallSize;
-                if (Sta.bigField[iB][jB].isCellFree(is, js))
-                    putXO(is,js);
+//           put XO, if click was maiden at convenience place
+                if (Sta.bigField[iB][jB].isCellFree(is, js)) putXO(is,js);
             }
+            draw = isDraw();
+            if (draw) gui.paintDraw();
+
         });
     }
 
@@ -70,37 +74,48 @@ public class Game extends Application {
 
         bigChange = Sta.bigField[bigI][bigJ].setIJ(is, js, Sta.XO);
         gui.paintUntouch(bigI, bigJ);
-        if ( bigChange ) {
-            Sta.finish = setBigIJ();
-            if (Sta.finish) return;
+
+        if ( bigChange ) {              //  het trick was maiden
+            Sta.finish = setBigIJ();    //  big field investigation
+            if (Sta.finish) return;     //  BIG HET TRICK   WIN!!!
         }
         Sta.XO = -Sta.XO;
-        if (Sta.bigField[is][js].isFull()) {
+        if (Sta.bigField[is][js].isFull()) {    // are all cells occupied?
             startNfull = true;
-            gui.paintAll(true);
-            gui.paintUntouch(is,js);
+            gui.paintAll(true);         // repaint full field with possible XO position
+            gui.paintUntouch(is,js);             // exclude full target block
             return;
         }
-        bigI = is;
-        bigJ = js;
+        bigI = is;      //  new
+        bigJ = js;      //  target block
         gui.paintAvailable(bigI, bigJ);
     }
 
     private boolean setBigIJ() {
-        boolean tmpBoo = false;
-        bigCells[bigI][ bigJ]=Sta.XO;
         int tmp[] = Sta.cellSeq[bigI][bigJ];
-        int stateTmp = 0;
-        for (int k : tmp) {
-            sum3big[k] += Sta.XO;
-            if (Sta.XO == 1) {
-                if (sum3big[k] > stateTmp) stateTmp = sum3big[k];
-            } else if (sum3big[k] < stateTmp) stateTmp = sum3big[k];
+        bigCells[bigI][ bigJ]=Sta.XO;
+        boolean flag = false;
+        for (int k : tmp) if (abs(sum3big[k] += Sta.XO) == 3) flag = true;
+//      WIN painting for BIG HET TRICK
+        if (flag) gui.paintWinner(Sta.XO, bigCells);
+        return flag;
+    }
+
+    boolean isDraw() {
+        int[] sum0 = Arrays.copyOf( sum3big,sum3big.length);
+        int[] sumX = Arrays.copyOf( sum3big,sum3big.length);
+        boolean flag = true;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (bigCells[i][j]!=0) continue;
+                int[] tmp = Sta.cellSeq[i][j];
+                if (Sta.bigField[i][j].isCan0())
+                    for (int k: tmp) if (++sumX[k] == 3) flag = false;
+                if (Sta.bigField[i][j].isCanX())
+                    for (int k: tmp) if (--sum0[k] == -3) flag = false;
+                if (!flag) break;
+            }
         }
-        if (abs(stateTmp) == 3) {
-            gui.paintWinner(Sta.XO, bigCells);
-            tmpBoo = true;
-        }
-        return tmpBoo;
+        return flag;
     }
 }
