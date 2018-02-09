@@ -54,7 +54,7 @@ class SmField {
             if (flag) {         //   someone makes a top three
                 this.stateSm = XO;
                 boTmp = true;
-            } else {            //   if not, then calculate the posibility in future
+            } else {            //   if not, then calculate the possibility in future
                 for (int k = 0; k < 8; k++) if (can0 = (count3sm[k] + sum3sm[k]) == 0) break;
                 for (int k = 0; k < 8; k++) if (canX = (count3sm[k] - sum3sm[k]) == 0) break;
             }
@@ -72,10 +72,6 @@ class SmField {
 
     int[][] getSmallField() {
         return cellsSF;
-    }
-
-    int getCell(int i, int j) {
-        return cellsSF[i][j];
     }
 
 }

@@ -3,9 +3,7 @@ package main.java;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.stage.Stage;
-
 import java.util.Arrays;
-
 import static java.lang.Math.abs;
 
 public class Game extends Application {
@@ -34,7 +32,6 @@ public class Game extends Application {
 //      All smallField first time painting
         gui.stage.setScene(gui.scene);
         gui.paintAll(true);
-
         gameListener(gui.canvas);
         gui.stage.show();
     }
@@ -100,8 +97,8 @@ public class Game extends Application {
         if (flag) gui.paintWinner(Sta.XO, bigCells);
         return flag;
     }
-
-    boolean isDraw() {
+//  calculation of dead heat possibility
+    private boolean isDraw() {
         int[] sum0 = Arrays.copyOf( sum3big,sum3big.length);
         int[] sumX = Arrays.copyOf( sum3big,sum3big.length);
         boolean flag = true;
