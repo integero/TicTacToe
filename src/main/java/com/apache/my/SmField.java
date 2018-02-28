@@ -5,8 +5,8 @@ import static java.lang.Math.abs;
 class SmField {
     private int freeCells;      //    amount of free cells
     private int stateSm;        //  0 - not occupied    -1 - occ by ZERO    1 - occ by CROSS
-    private boolean canX;       //  Can X win this field
-    private boolean can0;       //  Can 0 win this field
+    private boolean canX;       //  X can win this field
+    private boolean can0;       //  0 can win this field
     private int[][] cellsSF;    //  game cells
     private int[] sum3sm;       //  Contains sum for all direction in cellsSF. Let you see Sta.
     private int[] count3sm;     //  Contains counts of occupied cells for all directions.
@@ -34,37 +34,38 @@ class SmField {
 
     boolean isCanX() {
         return canX;
-    }
+    }       //  true if X can win
 
     boolean isCan0() {
         return can0;
-    }
+    }       //  true if 0 can win
 
-    boolean setIJ(int i, int j, int XO) {   //  settings XO in cell
-        boolean boTmp = false;
-        freeCells--;
+    boolean setIJ(int i, int j, int XO) {   //  putting XO into cell
+        boolean isTopThree = false;
+        freeCells--;                        //  decrease amount of free cells in current field
         cellsSF[i][j] = XO;
-        if (stateSm == 0) {     //  calculation the current situation if field s not occupied
-            int tmp[] = Sta.cellSeq[i][j];
-            boolean flag = false;
+        if (stateSm == 0) {                 //  calculation the current situation if field is not occupied
+            int tmp[] = Sta.cellSeq[i][j];  //  indexes of dependent elements in sum3sm & count3sm
+            boolean flag = false;           //  is (true) or not (false) top three occurs
             for (int k : tmp) {
                 count3sm[k]++;
                 if (abs(sum3sm[k] += XO) == 3) flag = true;
             }
-            if (flag) {         //   someone makes a top three
+            if (flag) {                     //  someone makes a top three
                 this.stateSm = XO;
-                boTmp = true;
-            } else {            //   if not, then calculate the possibility in future
+                isTopThree = true;
+            } else {                        //  if not, then calculate the possibility in future
+//  can0 & canX may be true if amount of occupied cells = amount of 0 or X (respectively) in any direction
                 for (int k = 0; k < 8; k++) if (can0 = (count3sm[k] + sum3sm[k]) == 0) break;
                 for (int k = 0; k < 8; k++) if (canX = (count3sm[k] - sum3sm[k]) == 0) break;
             }
         }
-        return boTmp;
+        return isTopThree;
     }
 
     int getStateSm() {
         return stateSm;
-    }
+    }   //  return -1 or 1 if occupied or 0 if not
 
     boolean isFull() {
         return freeCells == 0;
