@@ -62,7 +62,7 @@ public class Game extends Application {
                 if (Sta.bigField[iB][jB].isCellFree(is, js)) putXO(is,js);
             }
             draw = isDraw();
-            if (draw) gui.paintDraw();
+            if (draw) gui.paintDeadHeat();
 
         });
     }

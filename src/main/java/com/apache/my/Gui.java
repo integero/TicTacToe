@@ -8,7 +8,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-//  all things for user GUI
+//  all things for GUI
 class Gui {
     Stage stage;
     private Group root;
@@ -28,12 +28,12 @@ class Gui {
         root.getChildren().add(canvas);
     }
 
-    //  paint small game field. If available - paint all possible cells for step
+    //  paint small game field. If it is available - paint all possible cells for step
     private void paintIJ(int bigI, int bigJ, boolean available) {
+//      take small field in (bigI,bigJ) position of big field
         int[][] cells = Sta.bigField[bigI][bigJ].getSmallField();
-// 7.02 22:35
-        int tmp = Sta.bigField[bigI][bigJ].getStateSm();
-        gc.setFill(Sta.bigCellClr[tmp+1]);
+        int whoIsThere = Sta.bigField[bigI][bigJ].getStateSm();
+        gc.setFill(Sta.bigCellClr[whoIsThere+1]);       //  set color of the big cell being drawn
 
         currColor = (Color) gc.getFill();
         for (int i = 0; i < 3; i++)
@@ -41,19 +41,22 @@ class Gui {
 //              cells painting
                 gc.fillRect(blockPosition(bigI, i), blockPosition(bigJ, j), Sta.smallSize, Sta.smallSize);
                 if (cells[i][j] != 0)
-                    paintCell(cells[i][j], bigI, bigJ, i, j, false);
+                    paintXO(cells[i][j], bigI, bigJ, i, j, false);
+//       TODO remove ==0
                 else if (available && cells[i][j] == 0)
-                    paintCell(Sta.XO, bigI, bigJ, i, j, available);
+                    paintXO(Sta.XO, bigI, bigJ, i, j, available);
             }
     }
 
-    private void paintCell(int xo, int bigI, int bigJ, int i, int j, boolean available) {
-        int st = Sta.bigField[bigI][bigJ].getStateSm();
-          if (available) gc.setGlobalAlpha(0.3);
-        gc.setFill((xo==-1)?(st==-1)?Sta.clrTxt0w:Sta.clrTxt0:(st==1)?Sta.clrTxtXw:Sta.clrTxtX);
+    private void paintXO(int xo, int bigI, int bigJ, int i, int j, boolean available) {
+        if (available) gc.setGlobalAlpha(0.3);          //   set transparency
+        int whoIsOwner = Sta.bigField[bigI][bigJ].getStateSm();
+//      set color for 0 or X with respect of what is xo & who is owner of small field
+        gc.setFill((xo==-1)?(whoIsOwner==-1)?Sta.clrTxt0w:Sta.clrTxt0:(whoIsOwner==1)?Sta.clrTxtXw:Sta.clrTxtX);
+//      paint symbol 0 or X
         gc.fillText((xo == -1) ? "0" : "X", leftXO(bigI, i), bottXO(bigJ, j));
-        gc.setFill(currColor);
-        if (available) gc.setGlobalAlpha(1);
+        gc.setFill(currColor);                          //  restore small field color
+        if (available) gc.setGlobalAlpha(1);            //  restore transparency
     }
 
     //  smallField left & top position evaluation
@@ -76,13 +79,13 @@ class Gui {
         for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) paintIJ(i, j, available);
     }
 
-    //  smallField not available for gamestep
+    //  smallField not available for game step
     void paintUntouch(int bigI, int bigJ) {
         gc.setFill(Sta.clrCell);
         paintIJ(bigI, bigJ, false);
     }
 
-    //  smallField available for gamestep
+    //  smallField available for game step
     void paintAvailable(int bigI, int bigJ) {
         gc.setFill(Sta.clrAvlbl);
         paintIJ(bigI, bigJ, true);
@@ -93,17 +96,17 @@ class Gui {
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
                 if (fin[i][j] == winner) {
-                    gc.setFill(Sta.clrWin);
+                    gc.setFill(Sta.clrWin);         //  winner color
                     paintIJ(i, j, false);
-                    gc.setFill(Sta.clrCell);
+                    gc.setFill(Sta.clrCell);        //  non active cell color
                 }
 //      warning for CLOSE game
         gc.setFill(Color.WHITE);
         gc.fillText("Click at any place ", Sta.smallSize, Sta.bigSize);
         gc.fillText("for close GAME", Sta.smallSize, 2 * Sta.bigSize);
     }
-
-    void paintDraw() {
+//  paint for dead heat (draw)
+    void paintDeadHeat() {
         gc.setFill(Color.WHITE);
         gc.fillText("!!!DRAW!!! ", Sta.smallSize,Sta.bigSize);
         gc.fillText("look at ", Sta.smallSize, 2*Sta.bigSize);
