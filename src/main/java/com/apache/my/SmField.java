@@ -1,4 +1,4 @@
-package main.java;
+package com.apache.my;
 
 import static java.lang.Math.abs;
 

@@ -1,7 +1,8 @@
-package main.java;
+package com.apache.my;
 
 import javafx.application.Application;
 import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import java.util.Arrays;
 import static java.lang.Math.abs;
@@ -37,7 +38,7 @@ public class Game extends Application {
     }
 
     private void gameListener(final Node node) {
-        node.setOnMousePressed(event -> {
+        node.setOnMousePressed((MouseEvent event) -> {
             if (Sta.finish || draw) gui.stage.close();
             int i = (int) event.getX();
             int j = (int) event.getY();
