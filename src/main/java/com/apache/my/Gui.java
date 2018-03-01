@@ -42,12 +42,11 @@ class Gui {
                 gc.fillRect(blockPosition(bigI, i), blockPosition(bigJ, j), Sta.smallSize, Sta.smallSize);
                 if (cells[i][j] != 0)
                     paintXO(cells[i][j], bigI, bigJ, i, j, false);
-//       TODO remove ==0
-                else if (available && cells[i][j] == 0)
-                    paintXO(Sta.XO, bigI, bigJ, i, j, available);
+                else if (available)
+                    paintXO(Sta.XO, bigI, bigJ, i, j, true);
             }
     }
-
+//  paint symbols 0 & X with convenient colors
     private void paintXO(int xo, int bigI, int bigJ, int i, int j, boolean available) {
         if (available) gc.setGlobalAlpha(0.3);          //   set transparency
         int whoIsOwner = Sta.bigField[bigI][bigJ].getStateSm();
@@ -59,39 +58,38 @@ class Gui {
         if (available) gc.setGlobalAlpha(1);            //  restore transparency
     }
 
-    //  smallField left & top position evaluation
+//  smallField left & top position evaluation
     private int blockPosition(int bigIJ, int ij) {
         return bigIJ * Sta.bigSize + ij * (Sta.smallSize + Sta.smallDx);
     }
-
-    //  XO left position evaluation
+//  XO left position evaluation
     private int leftXO(int bigI, int i) {
         return blockPosition(bigI, i) + 4 * Sta.smallDx;
     }
 
-    //  XO bottom position evaluation
+//  XO bottom position evaluation
     private int bottXO(int bigJ, int j) {
         return blockPosition(bigJ, j) + Sta.smallSize - 3 * Sta.smallDx;
     }
 
-    //  painting all smallFields at the begin of game
+//  painting all smallFields at the begin of game
     void paintAll(boolean available) {
         for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) paintIJ(i, j, available);
     }
 
-    //  smallField not available for game step
+//  smallField not available for game step
     void paintUntouch(int bigI, int bigJ) {
         gc.setFill(Sta.clrCell);
         paintIJ(bigI, bigJ, false);
     }
 
-    //  smallField available for game step
+//  smallField available for game step
     void paintAvailable(int bigI, int bigJ) {
         gc.setFill(Sta.clrAvlbl);
         paintIJ(bigI, bigJ, true);
     }
 
-    //  WINNER TAKES ALL!!!
+//  WINNER TAKES ALL!!!
     void paintWinner(int winner, int[][] fin) {
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
